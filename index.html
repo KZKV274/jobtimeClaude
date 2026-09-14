@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>ShiftPulse — рабочий журнал</title>
+<meta name="description" content="Личный дашборд для учёта рабочих смен">
+<meta name="theme-color" content="#0B0D10">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShiftPulse">
+<link rel="stylesheet" href="vendor/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <div class="shell">
+
+    <!-- ============ TOP BAR ============ -->
+    <header class="topbar">
+      <div class="topbar__brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M2 12H7L9.5 5L14 19L16.5 12H22" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="brand-name" id="appNameLabel">ShiftPulse</span>
+      </div>
+      <button class="icon-btn" id="openSettings" aria-label="Настройки">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+      </button>
+    </header>
+
+    <!-- ============ MAIN VIEWS ============ -->
+    <main class="view">
+
+      <!-- ---------- HOME ---------- -->
+      <section class="screen active" id="screen-home">
+        <div class="greeting">
+          <div class="greeting__hi" id="greetingText">Добрый вечер</div>
+          <div class="greeting__sub">Твой рабочий журнал</div>
+        </div>
+
+        <div class="card status-card is-idle" id="statusCard">
+          <span class="status-pill idle" id="statusPill"><span class="dot"></span><span id="statusPillText">Не на смене</span></span>
+          <div class="status-card__body" id="statusBody">
+            <div class="home-status__title">Готов начать смену?</div>
+            <div class="status-card__meta" id="statusMeta">Нажми кнопку ниже, когда выйдешь на работу</div>
+          </div>
+          <div class="status-card__cta">
+            <button class="btn btn-primary" id="btnToggleShift">Начать смену</button>
+          </div>
+        </div>
+
+        <div class="section-title">Быстрая статистика</div>
+        <div class="stat-grid">
+          <div class="card stat-card">
+            <div class="stat-card__icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 9H21" stroke="currentColor" stroke-width="1.8"/><path d="M8 2V6M16 2V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="stat-value" id="statShiftsMonth">0</div>
+            <div class="stat-label">Смен в этом месяце</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-card__icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7V12L15.5 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <div class="stat-value" id="statHoursMonth">0ч</div>
+            <div class="stat-label">Часов в этом месяце</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-card__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7H21V13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="stat-value" id="statAvgShift">0ч</div>
+            <div class="stat-label">Средняя смена</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-card__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 10L16 14.5L17.5 21L12 17.5L6.5 21L8 14.5L3 10L9.5 8.5L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+            <div class="stat-value" id="statTotalShifts">0</div>
+            <div class="stat-label">Всего смен</div>
+          </div>
+        </div>
+
+        <div class="section-title" id="lastShiftTitle">Последняя смена</div>
+        <div id="lastShiftWrap"></div>
+
+        <div class="section-title">Этот месяц</div>
+        <div class="card month-card" id="monthCard">
+          <div class="month-card__label" id="monthCardLabel">СЕНТЯБРЬ 2026</div>
+          <div class="month-card__row">
+            <div class="month-card__hours" id="monthCardHours">0ч 00м</div>
+            <div class="month-card__shifts"><b id="monthCardShifts">0</b> смен</div>
+          </div>
+          <div class="month-card__sub">
+            <div><div class="n" id="monthCardAvg">0ч 00м</div><div class="l">Средняя смена</div></div>
+          </div>
+          <div class="progress">
+            <div class="progress__top"><span>Цель месяца</span><b id="progressPct">0%</b></div>
+            <div class="progress__track"><div class="progress__fill" id="progressFill" style="width:0%"></div></div>
+            <div class="progress__note" id="progressNote">Цель не задана</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- NEW SHIFT ---------- -->
+      <section class="screen" id="screen-new">
+        <div class="page-title">Новая смена</div>
+        <div class="page-sub" id="newShiftSub">Заполни данные, время рассчитается автоматически</div>
+
+        <div class="card form-card">
+          <div class="field">
+            <label for="fDate">Дата</label>
+            <input type="date" id="fDate">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="fStart">Начало</label>
+              <input type="time" id="fStart" value="09:00">
+            </div>
+            <div class="field">
+              <label for="fEnd">Окончание</label>
+              <input type="time" id="fEnd" value="18:00">
+            </div>
+          </div>
+          <div class="field">
+            <label for="fBreak">Перерыв (чч:мм)</label>
+            <input type="time" id="fBreak" value="01:00">
+          </div>
+          <div class="field">
+            <label for="fComment">Комментарий <span style="font-weight:500;color:var(--text-3)">(необязательно)</span></label>
+            <textarea id="fComment" rows="2" placeholder="Например: Дневная смена"></textarea>
+          </div>
+
+          <div class="duration-preview" id="durationPreview">
+            <div class="duration-preview__range" id="durationRangeText">09:00 → 18:00</div>
+            <div class="duration-preview__break" id="durationBreakText">Перерыв: 01:00</div>
+            <div class="duration-preview__total">
+              <span class="num numeric" id="durationTotalText">8ч 00м</span>
+              <span class="lbl">Итог</span>
+            </div>
+          </div>
+          <div class="form-error" id="formError"></div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="btnSaveShift">Сохранить смену</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- STATS ---------- -->
+      <section class="screen" id="screen-stats">
+        <div class="page-title">Статистика</div>
+
+        <div class="segmented" id="statsSegmented">
+          <button data-period="week">Неделя</button>
+          <button data-period="month" class="active">Месяц</button>
+          <button data-period="year">Год</button>
+        </div>
+
+        <div class="metric-grid">
+          <div class="card metric-card"><div class="stat-value" id="msShifts">0</div><div class="stat-label">Смен</div></div>
+          <div class="card metric-card"><div class="stat-value" id="msHours">0ч</div><div class="stat-label">Рабочих часов</div></div>
+          <div class="card metric-card"><div class="stat-value" id="msAvg">0ч</div><div class="stat-label">Средняя смена</div></div>
+          <div class="card metric-card"><div class="stat-value" id="msLongest">0ч</div><div class="stat-label">Самая длинная</div></div>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-card__title" id="chartTitle">Рабочие часы по дням</div>
+          <div class="chart-wrap"><canvas id="hoursChart"></canvas></div>
+        </div>
+
+        <div class="section-title">Дополнительно</div>
+        <div class="insight-grid">
+          <div class="card insight-card"><div class="insight-card__label">🔥 Серия</div><div class="insight-card__value" id="inStreak">0 дней</div></div>
+          <div class="card insight-card"><div class="insight-card__label">📅 Загруженный день</div><div class="insight-card__value" id="inBusiest">—</div></div>
+          <div class="card insight-card"><div class="insight-card__label">⏱️ Часов / неделю</div><div class="insight-card__value" id="inWeekAvg">0ч</div></div>
+          <div class="card insight-card"><div class="insight-card__label">📉 Короткая смена</div><div class="insight-card__value" id="inShortest">0ч</div></div>
+        </div>
+
+        <div class="card calendar-card">
+          <div class="calendar-head">
+            <div class="calendar-head__title" id="calTitle">Сентябрь 2026</div>
+            <div class="calendar-nav">
+              <button id="calPrev"><svg viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="calNext"><svg viewBox="0 0 24 24" fill="none"><path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calGrid"></div>
+          <div class="calendar-detail" id="calDetail">Выбери день, чтобы увидеть детали</div>
+        </div>
+
+        <div class="section-title">По месяцам</div>
+        <div class="month-breakdown" id="monthBreakdown"></div>
+      </section>
+
+      <!-- ---------- HISTORY ---------- -->
+      <section class="screen" id="screen-history">
+        <div class="page-title">История смен</div>
+
+        <div class="filter-row">
+          <div class="select-wrap">
+            <select id="historyFilter">
+              <option value="today">Сегодня</option>
+              <option value="week">Эта неделя</option>
+              <option value="month" selected>Этот месяц</option>
+              <option value="lastMonth">Прошлый месяц</option>
+              <option value="year">Этот год</option>
+              <option value="all">Все время</option>
+              <option value="custom">Произвольный период</option>
+            </select>
+          </div>
+        </div>
+        <div class="custom-range" id="customRange">
+          <input type="date" id="customFrom">
+          <input type="date" id="customTo">
+        </div>
+
+        <div id="historyContent"></div>
+      </section>
+
+    </main>
+
+    <!-- ============ BOTTOM NAV ============ -->
+    <nav class="bottom-nav">
+      <div class="bottom-nav__inner">
+        <button class="nav-btn active" data-target="home">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 11L12 4L21 11" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5V20H19V9.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-btn__label">Главная</span>
+        </button>
+        <button class="nav-btn" data-target="history">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 3V9H9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 13.5A8.5 8.5 0 1012 3.5a8.47 8.47 0 00-8.5 5.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8V12.5L15 14.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-btn__label">История</span>
+        </button>
+        <button class="nav-btn fab" data-target="new">
+          <span class="nav-btn__circle"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 5V19M5 12H19" stroke="white" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+        </button>
+        <button class="nav-btn" data-target="stats">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V13M12 20V4M20 20V9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="nav-btn__label">Статистика</span>
+        </button>
+        <button class="nav-btn" data-target="settings">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1.08 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span class="nav-btn__label">Настройки</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+</div>
+
+<!-- ============ SETTINGS SHEET ============ -->
+<div class="overlay" id="settingsOverlay">
+  <div class="sheet" style="max-height:92vh">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Настройки</div>
+    <div class="sheet__sub">Персонализируй ShiftPulse под себя</div>
+
+    <div class="settings-group">
+      <div class="settings-group__title">Общее</div>
+      <div class="card settings-card">
+        <div class="settings-row">
+          <div><div class="settings-row__label">Название приложения</div></div>
+          <input type="text" id="setAppName" value="ShiftPulse">
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Цель часов в месяц</div></div>
+          <input type="number" id="setGoalHours" value="176" min="0" step="1">
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Первый день недели</div></div>
+          <div class="toggle-group" id="setFirstDay">
+            <button data-val="mon" class="active">Пн</button>
+            <button data-val="sun">Вс</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Формат времени</div></div>
+          <div class="toggle-group" id="setTimeFormat">
+            <button data-val="24" class="active">24ч</button>
+            <button data-val="12">12ч</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Тема</div></div>
+          <div class="toggle-group" id="setTheme">
+            <button data-val="dark" class="active">Тёмная</button>
+            <button data-val="light">Светлая</button>
+            <button data-val="system">Система</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group__title">Данные</div>
+      <div class="card settings-card">
+        <div class="settings-row">
+          <div><div class="settings-row__label">Экспорт в JSON</div><div class="settings-row__sub">Полный бэкап для переноса</div></div>
+          <button class="icon-btn" id="btnExportJson"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3V15M12 15L8 11M12 15L16 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19A2 2 0 006 21H18A2 2 0 0020 19V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Экспорт в CSV</div><div class="settings-row__sub">Таблица для Excel / Sheets</div></div>
+          <button class="icon-btn" id="btnExportCsv"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3V15M12 15L8 11M12 15L16 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19A2 2 0 006 21H18A2 2 0 0020 19V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row__label">Импорт из JSON</div><div class="settings-row__sub">Восстановить бэкап</div></div>
+          <button class="icon-btn" id="btnImportJson"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15V3M12 3L8 7M12 3L16 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17V19A2 2 0 006 21H18A2 2 0 0020 19V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+          <input type="file" accept="application/json" class="hidden-file-input" id="importFileInput">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button class="btn btn-outline-danger" id="btnDeleteAll">Удалить все данные</button>
+    </div>
+    <div class="app-version">ShiftPulse · версия 1.0</div>
+  </div>
+</div>
+
+<!-- ============ SHIFT DETAIL / EDIT SHEET ============ -->
+<div class="overlay" id="detailOverlay">
+  <div class="sheet">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Смена</div>
+    <div class="sheet__sub" id="detailDateSub"></div>
+
+    <div class="field">
+      <label for="eDate">Дата</label>
+      <input type="date" id="eDate">
+    </div>
+    <div class="field-row">
+      <div class="field"><label for="eStart">Начало</label><input type="time" id="eStart"></div>
+      <div class="field"><label for="eEnd">Окончание</label><input type="time" id="eEnd"></div>
+    </div>
+    <div class="field">
+      <label for="eBreak">Перерыв (чч:мм)</label>
+      <input type="time" id="eBreak">
+    </div>
+    <div class="field">
+      <label for="eComment">Комментарий</label>
+      <textarea id="eComment" rows="2"></textarea>
+    </div>
+    <div class="duration-preview" id="editDurationPreview">
+      <div class="duration-preview__range" id="editDurationRangeText"></div>
+      <div class="duration-preview__break" id="editDurationBreakText"></div>
+      <div class="duration-preview__total"><span class="num numeric" id="editDurationTotalText"></span><span class="lbl">Итог</span></div>
+    </div>
+    <div class="form-error" id="editFormError"></div>
+
+    <div class="sheet__actions">
+      <button class="btn btn-outline-danger" id="btnDeleteShift">Удалить</button>
+      <button class="btn btn-primary" id="btnUpdateShift">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM SHEET (generic) ============ -->
+<div class="overlay" id="confirmOverlay">
+  <div class="sheet" style="max-width:380px">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title" id="confirmTitle">Удалить эту смену?</div>
+    <div class="sheet__sub" id="confirmSub">Это действие нельзя отменить.</div>
+    <div class="sheet__actions">
+      <button class="btn btn-ghost" id="confirmCancel">Отмена</button>
+      <button class="btn btn-danger-solid" id="confirmOk">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ IMPORT CONFIRM ============ -->
+<div class="overlay" id="importOverlay">
+  <div class="sheet" style="max-width:380px">
+    <div class="sheet__handle"></div>
+    <div class="sheet__title">Импортировать данные?</div>
+    <div class="sheet__sub">Существующие данные будут сохранены. Смены из файла будут добавлены к текущим.</div>
+    <div class="sheet__actions">
+      <button class="btn btn-ghost" id="importCancel">Отмена</button>
+      <button class="btn btn-primary" id="importOk">Импортировать</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="vendor/chart.umd.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
